@@ -11,13 +11,13 @@ def file2str_encoder(input_data):
     # 1.压缩
     compressed_data = zlib.compress(input_data)
     # 2.base64编码转字符串
-    encoded_str = base64.b64encode(compressed_data)
+    encoded_str = str(base64.b64encode(compressed_data))
     return encoded_str
 
 
 def make_qrcode_img(input_str):
     qr = QRCode(
-        version=1,
+        version=40,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=5,
         border=1,

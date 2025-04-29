@@ -39,9 +39,9 @@ class qrcodeGenerator(QThread):
                 # print(f"第{self.patch_index}张二维码生成")
                 right_index = min((self.patch_index + 1) * self.patch_size, len(self.encoded_str))
                 patch = self.encoded_str[self.patch_index * self.patch_size: right_index - 1]
-                qr_code_img = make_qrcode_img(patch)
+                qr_code_img = make_qrcode_img(f"##{self.total_count_count}##{self.patch_index}@@{patch}")
                 byte_array = io.BytesIO()
-                qr_code_img.save(byte_array, format='PNG')
+                qr_code_img.save(byte_array)
                 byte_array.seek(0)
                 q_img = QImage.fromData(byte_array.getvalue())
                 self.qrcode_list.append(q_img)
@@ -73,7 +73,7 @@ class QRCodeGenerator(QWidget):
         self.screen_w, self.screen_h = get_real_resolution()
 
         self.reset_button = None
-        self.labels = None
+        self.image_labels = None
         self.total_count = None
         self.encoded_str = None
         self.file = None
@@ -152,14 +152,14 @@ class QRCodeGenerator(QWidget):
         left_widget = QWidget()
         left_widget.setLayout(left_layout)
         # 右侧布局
-        self.labels = [QLabel(self) for _ in range(6)]  # 创建9个QLabel
-        for label in self.labels:
+        self.image_labels = [QLabel(self) for _ in range(6)]  # 创建9个QLabel
+        for label in self.image_labels:
             label.setAlignment(Qt.AlignCenter)  # 居中对齐
             label.setScaledContents(True)  # 自动缩放内容以适应标签大小
             label.setFixedSize((self.screen_w - 100) / 4, (self.screen_w - 100) / 4)  # 设置固定大小，可以根据需要调整
 
         grid_layout = QGridLayout()  # 使用QGridLayout进行3x3布局
-        for i, label in enumerate(self.labels):
+        for i, label in enumerate(self.image_labels):
             row = i // 3
             col = i % 3
             grid_layout.addWidget(label, row, col)
@@ -250,7 +250,7 @@ class QRCodeGenerator(QWidget):
 
     def qrcode_ready(self):
         # 二维码生成器生成完成后，开始按钮可点击
-        self.log("> 完成二维码生成，预计需要展示{:^3.0f}秒".format(self.total_count / len(self.labels) * self.qrcode_gen_second))
+        self.log("> 完成二维码生成，预计需要展示{:^3.0f}秒".format(self.total_count / len(self.image_labels) * self.qrcode_gen_second))
         self.log(f"> 点击开始按钮后{self.count_down_second_tmp}秒开始展示二维码")
         self.start_button.setEnabled(True)
 
@@ -278,6 +278,8 @@ class QRCodeGenerator(QWidget):
             self.qr_code_timer.start(self.qrcode_gen_second * 1000)  # 每秒生成一个二维码
 
     def show_qrcode(self):
+        for label_index, q_image in enumerate(self.image_labels):
+            self.image_labels[label_index].clear()
         if self.patch_index > self.total_count - 1:
             # 已经完成所有二维码的生成，停止生成二维码计时器
             self.qr_code_timer.stop()
@@ -286,10 +288,10 @@ class QRCodeGenerator(QWidget):
             self.log("")
         else:
             target_qrcode_imgs = self.qrcode_generator.qrcode_list[
-                                 self.patch_index: min(self.patch_index + len(self.labels), self.total_count)]
+                                 self.patch_index: min(self.patch_index + len(self.image_labels), self.total_count)]
             for label_index, q_image in enumerate(target_qrcode_imgs):
-                self.labels[label_index].setPixmap(QPixmap.fromImage(q_image))
-        self.patch_index += len(self.labels)
+                self.image_labels[label_index].setPixmap(QPixmap.fromImage(q_image))
+        self.patch_index += len(self.image_labels)
 
 
 
