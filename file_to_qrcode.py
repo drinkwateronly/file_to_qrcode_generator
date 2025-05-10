@@ -12,7 +12,25 @@ def file2str_encoder(input_data):
     compressed_data = zlib.compress(input_data)
     # 2.base64编码转字符串
     encoded_str = str(base64.b64encode(compressed_data))
+    print("encoded_str:", encoded_str)
     return encoded_str
+
+
+def str2file_decoder(encoded_str):
+    print("str2file_decoder: encode_str:", encoded_str)
+    try:
+        # 1. 去除字符串的 b'' 标记（如果有）
+        if encoded_str.startswith("b'") and encoded_str.endswith("'"):
+            encoded_str = encoded_str[2:-1]
+        print("remove b:", encoded_str)
+        # 2. Base64 解码（还原字节数据）
+        compressed_data = base64.b64decode(encoded_str)
+        # 3. Zlib 解压缩（还原原始数据）
+        original_data = zlib.decompress(compressed_data)
+        return original_data
+    except Exception as e:
+        print(e)
+
 
 
 def make_qrcode_img(input_str):

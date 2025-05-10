@@ -1,3 +1,4 @@
+import math
 import re
 import time
 
@@ -8,6 +9,8 @@ from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QVBoxLayout, QApplication, QFormLayout, QLineEdit
 import sys
 import cv2
+
+from file_to_qrcode import str2file_decoder
 
 
 def detectQRcodeFromScreenshot(pltImage):
@@ -20,6 +23,38 @@ def detectQRcodeFromScreenshot(pltImage):
 def genFixLengthList(length):
     return ['' for i in range(length)]
 
+
+
+class QRCodeDetector(QThread):
+    """ 监控屏幕上有无二维码，若有则发送二维码数量信号 """
+    detect_signal = pyqtSignal(int)
+    error_signal = pyqtSignal(str)
+
+    def __init__(self, *args, **kwargs):
+        super(QRCodeDetector, self).__init__()
+
+    def run(self):
+        try:
+            # 截屏
+            screenshot = ImageGrab.grab()
+            # 检测二维码对象
+            decoded_objects = detectQRcodeFromScreenshot(screenshot)
+            if len(decoded_objects) != 0:
+                data = decoded_objects[0].data.decode('utf-8')
+                print(f"Detected QR Code: {data}")
+                # 尝试获取其中的所需扫描二维码数量
+                match = re.search(r'##(\d+)##(\d+)@@', data)
+                if not match:
+                    # 检测到二维码，但是二维码里没有数字
+                    self.error_signal.emit("探测出二维码，但未能获取所需扫描次数")
+                    return
+                # 二维码总数
+                total_qrcode_cnt = int(match.group(1))
+                # 二维码的index
+                # patch_index = int(match.group(2))
+                self.detect_signal.emit(total_qrcode_cnt)
+        except Exception as e:
+            self.error_signal.emit(e)
 
 class QRCodeScanner(QThread):
     """ 扫描屏幕二维码，完成后返回，不对内部数据做任何处理"""
@@ -47,34 +82,6 @@ class QRCodeScanner(QThread):
             self.error_signal.emit(e)
 
 
-class QRCodeDetector(QThread):
-    """ 监控屏幕上有无二维码 """
-    detect_signal = pyqtSignal(int)
-    error_signal = pyqtSignal(str)
-
-    def __init__(self, *args, **kwargs):
-        super(QRCodeDetector, self).__init__()
-
-    def run(self):
-        try:
-            # 截屏
-            screenshot = ImageGrab.grab()
-            # 检测二维码对象
-            decoded_objects = detectQRcodeFromScreenshot(screenshot)
-            if len(decoded_objects) != 0:
-                data = decoded_objects[0].data.decode('utf-8')
-                print(f"Detected QR Code: {data}")
-                # 尝试获取其中的所需扫描二维码数量
-                match = re.search(r'##(\d+)##', data)
-                if not match:
-                    # 检测到二维码，但是二维码里没有数字
-                    self.error_signal.emit("探测出二维码，但未能获取所需扫描次数")
-                    return
-                # 所需扫描次数
-                scan_num  = int(match.group(1))
-                self.detect_signal.emit(scan_num)
-        except Exception as e:
-            self.error_signal.emit(e)
 
 
 class QRcode2File(QWidget):
@@ -129,36 +136,69 @@ class QRcode2File(QWidget):
         self.log("检测二维码...")
         self.qrcode_detector.start()
 
-    def code_first_show(self, scan_num):
-        """ 二维码首次出现了，开始扫描二维码 """
-        self.log(f"二维码出现，即将扫描{scan_num}次")
-        self.scan_num = scan_num
-        # 停止检测器
-        self.detector_timer.stop()
-        # 新建一个scanner
-        self.qrcode_scanner = QRCodeScanner()
-        self.qrcode_scanner.scanner_done_signal.connect(self.scanner_done)
+    def code_first_show(self, patch_cnt):
+        try:
+            """ 二维码首次出现了，开始扫描二维码 """
+            print("QR Code first show")
+            self.scan_num = math.ceil(patch_cnt / 6)
+            self.log(f"二维码出现，即将扫描{self.scan_num}次")
+            # 停止检测器
+            self.detector_timer.stop()
 
-        self.scanner_timer.timeout.connect(self.scanner_timer_do)
-        self.scanner_timer.start(1000)  # 每秒触发一次二维码扫描
 
-    def scanner_timer_do(self):
-        # 新建一个scanner
-        self.qrcode_scanner.start()
+            # 新建一个scanner
+            self.qrcode_scanner = QRCodeScanner()
+            # scanner信号完成时
+            self.qrcode_scanner.scanner_done_signal.connect(self.scanner_done)
+            # 先扫描一次
+            self.qrcode_scanner.start()
+
+            # 设置一个计时器
+            self.scanner_timer.timeout.connect(self.qrcode_scanner.start)
+            # 每秒触发一次二维码扫描
+            self.scanner_timer.start(1000)
+        except Exception as e:
+            print(e)
+
 
     def scanner_done(self, qrcode_data_list):
-        """ 扫描完一帧二维码 """
-        if self.scan_num == 0:
-            """ 扫描次数完成，停止扫描 """
-            self.scanner_timer.stop()
-            self.log("完成所有二维码扫描，开始合成文件")
-            for i in self.data_list:
-                print(i)
-            return
-        else:
-            """ 扫描未完成 """
-            self.data_list.append(qrcode_data_list)
-            self.scan_num -= 1
+        try:
+            """ 每次扫描一帧二维码 """
+            if self.scan_num > 0:
+                """ 扫描未完成 """
+                for qrcode_data in qrcode_data_list:
+                    self.data_list.append(qrcode_data)
+                self.scan_num -= 1
+            else:
+                """ 扫描次数完成，停止扫描 """
+                self.scanner_timer.stop()
+                self.log("完成所有二维码扫描，开始合成文件")
+
+                data_mapped = {}
+                for data in self.data_list:
+                    pattern = r"##(\d+)##(\d+)@@"  # 匹配开头到第一个 ##数字1##数字2@@‘
+                    # 提取所有匹配的数字对
+                    matches = re.search(pattern, data)
+                    index = int(matches.group(2))
+                    print(index)
+                    # 移除所有匹配的模式
+                    patch = re.sub(pattern, "", data, count=1)  # count=1 表示只替换第一个匹配项
+                    print(patch)
+
+                    data_mapped[index] = patch
+                print(data_mapped)
+                sorted_values = [data_mapped[key] for key in sorted(data_mapped.keys())]
+                compressed_data = " ".join(sorted_values)
+                print("compressed_data:", compressed_data)
+                #
+                file_data = str2file_decoder(compressed_data)
+                print(file_data)
+
+                with open('output_file.bin', 'wb') as f:
+                    f.write(file_data)
+                return
+        except Exception as e:
+            print(e)
 
     def log(self, message):
         """向日志框中添加日志"""

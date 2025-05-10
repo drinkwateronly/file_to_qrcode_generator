@@ -38,7 +38,7 @@ class qrcodeGenerator(QThread):
             for self.patch_index in range(self.total_count_count):
                 # print(f"第{self.patch_index}张二维码生成")
                 right_index = min((self.patch_index + 1) * self.patch_size, len(self.encoded_str))
-                patch = self.encoded_str[self.patch_index * self.patch_size: right_index - 1]
+                patch = self.encoded_str[self.patch_index * self.patch_size: right_index]
                 qr_code_img = make_qrcode_img(f"##{self.total_count_count}##{self.patch_index}@@{patch}")
                 byte_array = io.BytesIO()
                 qr_code_img.save(byte_array)
