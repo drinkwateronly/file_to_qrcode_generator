@@ -4,6 +4,7 @@ import win32print
 from zlib import compress, decompress
 from base64 import b64encode, b64decode
 from qrcode import QRCode, ERROR_CORRECT_L, ERROR_CORRECT_M, ERROR_CORRECT_Q, ERROR_CORRECT_H
+from hashlib import md5
 
 
 def get_real_resolution():
@@ -63,3 +64,7 @@ def str2file_decoder(encoded_str):
         return original_data
     except Exception as e:
         print(e)
+
+
+def getMd5(input_byte):
+    return md5(input_byte).hexdigest()

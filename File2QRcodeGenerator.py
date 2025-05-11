@@ -2,13 +2,12 @@ import io
 import math
 import os
 import sys
-import tkinter
-from tkinter import messagebox
+from tkinter import Tk, messagebox
 from PyQt5.QtWidgets import QApplication, QLabel, QFileDialog, QVBoxLayout, QWidget, QTextEdit, QPushButton, \
     QHBoxLayout, QSplitter, QGridLayout, QLineEdit, QFormLayout, QComboBox
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QTextCursor
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
-from tools import get_real_resolution, makeQRcodeImg, file2strEncode
+from tools import get_real_resolution, makeQRcodeImg, file2strEncode, getMd5
 
 
 class Str2QRcodeGenerator(QThread):
@@ -25,6 +24,7 @@ class Str2QRcodeGenerator(QThread):
         self.total_count = None
         self.qrcode_list = []
 
+        self.show_interval = 1000
         self.version = 40
         self.error_correction_lvl = 'L'
         self.box_size = 5
@@ -35,6 +35,7 @@ class Str2QRcodeGenerator(QThread):
                   encoded_str,
                   patch_size,
                   total_count,
+                  show_interval,
                   version=40,
                   error_correction_lvl='L',
                   box_size=5,
@@ -44,13 +45,15 @@ class Str2QRcodeGenerator(QThread):
         :param encoded_str: 待转为二维码的字符串（文件压缩并转码后的字符串）
         :param patch_size: 每张二维码的存放字符串的比特长度
         :param total_count: 总二维码数量
+        :param show_interval: 二维码展示的间隔
         :param version: 二维码版本
         :param error_correction_lvl: 纠错版本，可选L/M/Q/H
         :param box_size: 二维码尺寸
         :param border: 二维码边缘空白尺寸
         :return:
         """
-        self.encoded_str, self.patch_byte_len, self.total_count = encoded_str, patch_size, total_count
+        self.encoded_str, self.patch_byte_len, self.total_count, self.show_interval \
+            = encoded_str, patch_size, total_count, show_interval
         self.version = version
         self.error_correction_lvl = error_correction_lvl
         self.box_size = box_size
@@ -65,7 +68,7 @@ class Str2QRcodeGenerator(QThread):
                 right_pos = min((patch_index + 1) * self.patch_byte_len, len(self.encoded_str))
                 patch_str = self.encoded_str[patch_index * self.patch_byte_len: right_pos]
                 # 加入前缀提供二维码数量信息
-                patch_str = f"##{self.total_count}##{patch_index}@@{patch_str}"
+                patch_str = f"##{self.total_count}##{patch_index}##{self.show_interval}@@{patch_str}"
                 # 字符串转二维码图片
                 qr_code_img = makeQRcodeImg(input_str=patch_str,
                                             version=self.version,
@@ -257,6 +260,7 @@ class File2QRcodeGenerator(QWidget):
 
     def log(self, message):
         self.log_text_edit.append(message)
+        self.log_text_edit.moveCursor(QTextCursor.End)
 
     def repeatLog(self, message):
         current_text = self.log_text_edit.toPlainText()
@@ -283,13 +287,15 @@ class File2QRcodeGenerator(QWidget):
                 else:
                     # 处理文件
                     self.log(f"> 选择了文件: {file_path}")
-                    file = open(file_path, 'rb').read()
+                    file_data = open(file_path, 'rb').read()
                     #
-                    self.encoded_str = file2strEncode(file)
+                    self.encoded_str = file2strEncode(file_data)
                     self.total_count = math.ceil(len(self.encoded_str) / self.patch_size)
 
                     self.log(f"> 需要生成{self.total_count}张二维码, 点击开始按钮生成")
                     self.file_2_qrcode_button.setEnabled(True)
+                    self.log(f'文件MD5值为：{getMd5(file_data)}')
+
         except Exception as e:
             self.log(f"> 打开文件出错：{e}")
             raise e
@@ -315,6 +321,7 @@ class File2QRcodeGenerator(QWidget):
             self.str2qrcode_generator.setParams(encoded_str=self.encoded_str,
                                                 patch_size=self.patch_size,
                                                 total_count=self.total_count,
+                                                show_interval=self.qr_show_interval,
                                                 version=self.version,
                                                 error_correction_lvl=self.error_correction_lvl)
             self.str2qrcode_generator.start()
@@ -428,7 +435,7 @@ class File2QRcodeGenerator(QWidget):
 
 
 if __name__ == '__main__':
-    root = tkinter.Tk()
+    root = Tk()
     root.withdraw()
 
     app = QApplication(sys.argv)

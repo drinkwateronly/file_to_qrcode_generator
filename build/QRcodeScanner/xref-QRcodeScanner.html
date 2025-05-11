@@ -30,9 +30,6 @@ imports:
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
  &#8226;   <a href="#copyreg">copyreg</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.COLOR_BGR2GRAY">cv2.COLOR_BGR2GRAY</a>
- &#8226;   <a href="#cv2.cvtColor">cv2.cvtColor</a>
  &#8226;   <a href="#encodings">encodings</a>
  &#8226;   <a href="#encodings.aliases">encodings.aliases</a>
  &#8226;   <a href="#encodings.ascii">encodings.ascii</a>
@@ -169,8 +166,6 @@ imports:
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#math">math</a>
  &#8226;   <a href="#ntpath">ntpath</a>
- &#8226;   <a href="#numpy">numpy</a>
- &#8226;   <a href="#numpy.array">numpy.array</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pathlib">pathlib</a>
@@ -183,6 +178,7 @@ imports:
  &#8226;   <a href="#pyi_rth_pywintypes.py">pyi_rth_pywintypes.py</a>
  &#8226;   <a href="#pyi_rth_win32comgenpy.py">pyi_rth_win32comgenpy.py</a>
  &#8226;   <a href="#pyzbar.pyzbar">pyzbar.pyzbar</a>
+ &#8226;   <a href="#random">random</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#reprlib">reprlib</a>
  &#8226;   <a href="#sre_compile">sre_compile</a>
@@ -364,7 +360,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'org.python'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#pickle">pickle</a>
+    <a href="#copy">copy</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
 
   </div>
@@ -4178,7 +4174,6 @@ imported by:
  &#8226;   <a href="#ast">ast</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
  &#8226;   <a href="#contextlib">contextlib</a>
- &#8226;   <a href="#cv2.utils">cv2.utils</a>
  &#8226;   <a href="#difflib">difflib</a>
  &#8226;   <a href="#dis">dis</a>
  &#8226;   <a href="#doctest">doctest</a>
@@ -4359,8 +4354,8 @@ imported by:
   <a target="code" href="///C:/Users/chen/AppData/Local/Programs/Python/Python37/lib/copy.py" type="text/plain"><tt>copy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#copyreg">copyreg</a>
- &#8226;   <a href="#org">org</a>
+    <a href="#'org.python'">'org.python'</a>
+ &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -4371,7 +4366,6 @@ imported by:
  &#8226;   <a href="#_sre">_sre</a>
  &#8226;   <a href="#argparse">argparse</a>
  &#8226;   <a href="#collections">collections</a>
- &#8226;   <a href="#cv2">cv2</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#email.generator">email.generator</a>
  &#8226;   <a href="#gettext">gettext</a>
@@ -4584,341 +4578,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#_pyi_rth_utils._win32">_pyi_rth_utils._win32</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/__init__.py" type="text/plain"><tt>cv2</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#copy">copy</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.COLOR_BGR2GRAY">cv2.COLOR_BGR2GRAY</a>
- &#8226;   <a href="#cv2.config">cv2.config</a>
- &#8226;   <a href="#cv2.config-3">cv2.config-3</a>
- &#8226;   <a href="#cv2.cv2">cv2.cv2</a>
- &#8226;   <a href="#cv2.cvtColor">cv2.cvtColor</a>
- &#8226;   <a href="#cv2.data">cv2.data</a>
- &#8226;   <a href="#cv2.gapi">cv2.gapi</a>
- &#8226;   <a href="#cv2.load_config_py3">cv2.load_config_py3</a>
- &#8226;   <a href="#cv2.mat_wrapper">cv2.mat_wrapper</a>
- &#8226;   <a href="#cv2.misc">cv2.misc</a>
- &#8226;   <a href="#cv2.misc.version">cv2.misc.version</a>
- &#8226;   <a href="#cv2.typing">cv2.typing</a>
- &#8226;   <a href="#cv2.utils">cv2.utils</a>
- &#8226;   <a href="#cv2.version">cv2.version</a>
- &#8226;   <a href="#importlib">importlib</a>
- &#8226;   <a href="#numpy">numpy</a>
- &#8226;   <a href="#numpy.core.multiarray">numpy.core.multiarray</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#platform">platform</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.config">cv2.config</a>
- &#8226;   <a href="#cv2.config-3">cv2.config-3</a>
- &#8226;   <a href="#cv2.cv2">cv2.cv2</a>
- &#8226;   <a href="#cv2.data">cv2.data</a>
- &#8226;   <a href="#cv2.dnn">cv2.dnn</a>
- &#8226;   <a href="#cv2.gapi">cv2.gapi</a>
- &#8226;   <a href="#cv2.load_config_py3">cv2.load_config_py3</a>
- &#8226;   <a href="#cv2.mat_wrapper">cv2.mat_wrapper</a>
- &#8226;   <a href="#cv2.misc">cv2.misc</a>
- &#8226;   <a href="#cv2.misc.version">cv2.misc.version</a>
- &#8226;   <a href="#cv2.typing">cv2.typing</a>
- &#8226;   <a href="#cv2.utils">cv2.utils</a>
- &#8226;   <a href="#cv2.version">cv2.version</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.COLOR_BGR2GRAY"></a>
-  <a target="code" href="" type="text/plain"><tt>cv2.COLOR_BGR2GRAY</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
- &#8226;   <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.config"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/config.py" type="text/plain"><tt>cv2.config</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#os">os</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.config-3"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/config-3.py" type="text/plain"><tt>cv2.config-3</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.version">cv2.version</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.cv2"></a>
-  <tt>cv2.cv2</tt> <span class="moduletype"><tt>E:\_code\file_to_qrcode_generator\venv\lib\site-packages\cv2\cv2.pyd</tt></span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.cvtColor"></a>
-  <a target="code" href="" type="text/plain"><tt>cv2.cvtColor</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
- &#8226;   <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.data"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/data/__init__.py" type="text/plain"><tt>cv2.data</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#os">os</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.dnn"></a>
-  <a target="code" href="-" type="text/plain"><tt>cv2.dnn</tt></a>
-<span class="moduletype">NamespacePackage</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2.typing">cv2.typing</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.gapi"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/gapi/__init__.py" type="text/plain"><tt>cv2.gapi</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.gapi.wip">cv2.gapi.wip</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.gapi.wip"></a>
-  <a target="code" href="-" type="text/plain"><tt>cv2.gapi.wip</tt></a>
-<span class="moduletype">NamespacePackage</span>  <div class="import">
-imports:
-    <a href="#cv2.gapi">cv2.gapi</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2.gapi.wip.draw">cv2.gapi.wip.draw</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.gapi.wip.draw"></a>
-  <a target="code" href="-" type="text/plain"><tt>cv2.gapi.wip.draw</tt></a>
-<span class="moduletype">NamespacePackage</span>  <div class="import">
-imports:
-    <a href="#cv2.gapi.wip">cv2.gapi.wip</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2.typing">cv2.typing</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.load_config_py3"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/load_config_py3.py" type="text/plain"><tt>cv2.load_config_py3</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.mat_wrapper"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/mat_wrapper/__init__.py" type="text/plain"><tt>cv2.mat_wrapper</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#numpy">numpy</a>
- &#8226;   <a href="#typing">typing</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.typing">cv2.typing</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.misc"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/misc/__init__.py" type="text/plain"><tt>cv2.misc</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.misc.version">cv2.misc.version</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.misc.version">cv2.misc.version</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.misc.version"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/misc/version.py" type="text/plain"><tt>cv2.misc.version</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.misc">cv2.misc</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.misc">cv2.misc</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.typing"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/typing/__init__.py" type="text/plain"><tt>cv2.typing</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.dnn">cv2.dnn</a>
- &#8226;   <a href="#cv2.gapi.wip.draw">cv2.gapi.wip.draw</a>
- &#8226;   <a href="#cv2.mat_wrapper">cv2.mat_wrapper</a>
- &#8226;   <a href="#numpy">numpy</a>
- &#8226;   <a href="#typing">typing</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.utils"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/utils/__init__.py" type="text/plain"><tt>cv2.utils</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#collections">collections</a>
- &#8226;   <a href="#cv2">cv2</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="cv2.version"></a>
-  <a target="code" href="///E:/_code/file_to_qrcode_generator/venv/lib/site-packages/cv2/version.py" type="text/plain"><tt>cv2.version</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#cv2">cv2</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.config-3">cv2.config-3</a>
 
   </div>
 
@@ -8518,6 +8177,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#random">random</a>
+ &#8226;   <a href="#tools">tools</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
 
   </div>
@@ -8737,8 +8397,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#imp">imp</a>
+    <a href="#imp">imp</a>
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
@@ -9599,10 +9258,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#PIL.Image">PIL.Image</a>
- &#8226;   <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.mat_wrapper">cv2.mat_wrapper</a>
- &#8226;   <a href="#cv2.typing">cv2.typing</a>
  &#8226;   <a href="#numpy">numpy</a>
  &#8226;   <a href="#numpy.__config__">numpy.__config__</a>
  &#8226;   <a href="#numpy._distributor_init">numpy._distributor_init</a>
@@ -9794,8 +9449,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>numpy.array</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
- &#8226;   <a href="#numpy">numpy</a>
+    <a href="#numpy">numpy</a>
  &#8226;   <a href="#numpy.ma.core">numpy.ma.core</a>
  &#8226;   <a href="#numpy.ma.extras">numpy.ma.extras</a>
  &#8226;   <a href="#numpy.ma.mrecords">numpy.ma.mrecords</a>
@@ -11103,8 +10757,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#numpy.core">numpy.core</a>
+    <a href="#numpy.core">numpy.core</a>
  &#8226;   <a href="#numpy.core._asarray">numpy.core._asarray</a>
  &#8226;   <a href="#numpy.core._internal">numpy.core._internal</a>
  &#8226;   <a href="#numpy.core._methods">numpy.core._methods</a>
@@ -13486,7 +13139,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>org</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#copy">copy</a>
+    <a href="#pickle">pickle</a>
 
   </div>
 
@@ -13546,10 +13199,6 @@ imported by:
  &#8226;   <a href="#ctypes._aix">ctypes._aix</a>
  &#8226;   <a href="#ctypes.macholib.dyld">ctypes.macholib.dyld</a>
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.config">cv2.config</a>
- &#8226;   <a href="#cv2.data">cv2.data</a>
- &#8226;   <a href="#cv2.load_config_py3">cv2.load_config_py3</a>
  &#8226;   <a href="#doctest">doctest</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
@@ -14078,14 +13727,14 @@ imported by:
   <a target="code" href="///C:/Users/chen/AppData/Local/Programs/Python/Python37/lib/pickle.py" type="text/plain"><tt>pickle</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'org.python'">'org.python'</a>
- &#8226;   <a href="#_compat_pickle">_compat_pickle</a>
+    <a href="#_compat_pickle">_compat_pickle</a>
  &#8226;   <a href="#_pickle">_pickle</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#itertools">itertools</a>
+ &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#struct">struct</a>
@@ -15327,8 +14976,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#cv2">cv2</a>
- &#8226;   <a href="#numpy.core._add_newdocs_scalars">numpy.core._add_newdocs_scalars</a>
+    <a href="#numpy.core._add_newdocs_scalars">numpy.core._add_newdocs_scalars</a>
  &#8226;   <a href="#numpy.core._internal">numpy.core._internal</a>
  &#8226;   <a href="#numpy.distutils.cpuinfo">numpy.distutils.cpuinfo</a>
  &#8226;   <a href="#numpy.testing._private.utils">numpy.testing._private.utils</a>
@@ -16468,6 +16116,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#PIL.ImagePalette">PIL.ImagePalette</a>
+ &#8226;   <a href="#QRcodeScanner.py">QRcodeScanner.py</a>
  &#8226;   <a href="#email.generator">email.generator</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#pkg_resources._vendor.more_itertools.more">pkg_resources._vendor.more_itertools.more</a>
@@ -17126,9 +16775,6 @@ imported by:
  &#8226;   <a href="#ctypes._aix">ctypes._aix</a>
  &#8226;   <a href="#ctypes._endian">ctypes._endian</a>
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
- &#8226;   <a href="#cv2">cv2</a>
- &#8226;   <a href="#cv2.gapi">cv2.gapi</a>
- &#8226;   <a href="#cv2.load_config_py3">cv2.load_config_py3</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#dis">dis</a>
  &#8226;   <a href="#doctest">doctest</a>
@@ -17535,6 +17181,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#base64">base64</a>
+ &#8226;   <a href="#hashlib">hashlib</a>
  &#8226;   <a href="#qrcode">qrcode</a>
  &#8226;   <a href="#win32con">win32con</a>
  &#8226;   <a href="#win32gui">win32gui</a>
@@ -17697,9 +17344,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#cv2.mat_wrapper">cv2.mat_wrapper</a>
- &#8226;   <a href="#cv2.typing">cv2.typing</a>
- &#8226;   <a href="#functools">functools</a>
+    <a href="#functools">functools</a>
  &#8226;   <a href="#importlib.resources">importlib.resources</a>
  &#8226;   <a href="#packaging._elffile">packaging._elffile</a>
  &#8226;   <a href="#packaging._manylinux">packaging._manylinux</a>

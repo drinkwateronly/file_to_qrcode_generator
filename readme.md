@@ -1,9 +1,9 @@
 Base64 的内容是有 0 ～ 9，a ～ z，A ～ Z，+，/ 组成，正好 64 个字符
 
- pyinstaller --windowed --upx-dir=C:\Users\chen\Downloads\upx-5.0.0-win64\upx-5.0.0-win64 --onefile --exclude-module PyQt5.QtWebEngine --exclude-module PyQt5.QtNetwork --exclude-module PyQt5.QtSql QRcodeScanner.py 
+ pyinstaller --windowed --upx-dir=C:\Users\chen\Downloads\upx-5.0.0-win64\upx-5.0.0-win64 --onefile --exclude-module PyQt5.QtWebEngine --exclude-module PyQt5.QtNetwork --exclude-module PyQt5.QtSql --hidden-import "pywin32" File2QRcodeGenerator.py
 
 https://blog.csdn.net/jzwalliser/article/details/136010089
- pyinstaller --windowed --upx-dir=C:\Users\chen\Downloads\upx-5.0.0-win64\upx-5.0.0-win64 --onefile --exclude-module PyQt5.QtWebEngine --exclude-module PyQt5.QtNetwork --exclude-module PyQt5.QtSql --add-data "libzbar-64.dll;pyzbar" --add-data "libiconv.dll;pyzbar" QRcodeScanner.py  
+ pyinstaller --windowed --upx-dir=C:\Users\chen\Downloads\upx-5.0.0-win64\upx-5.0.0-win64 --onefile --exclude-module PyQt5.QtWebEngine --exclude-module PyQt5.QtNetwork --exclude-module PyQt5.QtSql --add-data "libzbar-64.dll;pyzbar" --add-data "libiconv.dll;pyzbar" --hidden-import "pywin32" QRcodeScanner.py  
 File2QRcodeGenerator.py
 
 
