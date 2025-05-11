@@ -1,28 +1,21 @@
 import math
 import re
-import time
-
-from pyzbar.pyzbar import decode
-from numpy import array
+import sys
+from cv2 import cvtColor, COLOR_BGR2GRAY
 from PIL import ImageGrab
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QVBoxLayout, QApplication, QFormLayout, QLineEdit
-import sys
-import cv2
+from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QVBoxLayout, QApplication
+from numpy import array
+from pyzbar.pyzbar import decode
 
-from file_to_qrcode import str2file_decoder
+from tools import str2file_decoder
 
 
 def detectQRcodeFromScreenshot(pltImage):
     # ImageGrab类型转为np.array才能被处理
-    gray = cv2.cvtColor(array(pltImage), cv2.COLOR_BGR2GRAY)
+    gray = cvtColor(array(pltImage), COLOR_BGR2GRAY)
     decoded_objects = decode(gray)
     return decoded_objects
-
-
-def genFixLengthList(length):
-    return ['' for i in range(length)]
-
 
 
 class QRCodeDetector(QThread):

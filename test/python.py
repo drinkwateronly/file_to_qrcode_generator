@@ -1,10 +1,9 @@
-import multiprocessing
 import time
 
 import cv2
 import qrcode
 
-from qrcode_to_file import  qrcode_scan
+from tmp.qrcode_to_file import  qrcode_scan
 from qrcode import QRCode
 
 import random
