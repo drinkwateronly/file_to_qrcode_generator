@@ -75,7 +75,7 @@ class QRCodeScanner(QThread):
             raise e
 
 
-class QRcode2File(QWidget):
+class QRcode2FileGenerator(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -197,6 +197,6 @@ class QRcode2File(QWidget):
 # 运行应用程序
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = QRcode2File()
+    window = QRcode2FileGenerator()
     window.show()
     sys.exit(app.exec_())

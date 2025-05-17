@@ -2,12 +2,11 @@ import io
 import math
 import os
 import sys
-from tkinter import Tk, messagebox
 from PyQt5.QtWidgets import QApplication, QLabel, QFileDialog, QVBoxLayout, QWidget, QTextEdit, QPushButton, \
-    QHBoxLayout, QSplitter, QGridLayout, QLineEdit, QFormLayout, QComboBox
+    QHBoxLayout, QSplitter, QGridLayout, QLineEdit, QComboBox
 from PyQt5.QtGui import QPixmap, QImage, QTextCursor
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
-from tools import get_real_resolution, makeQRcodeImg, file2strEncode, getMd5
+from tools import makeQRcodeImg, file2strEncode, getMd5
 
 
 class Str2QRcodeGenerator(QThread):
@@ -115,7 +114,7 @@ class File2QRcodeGenerator(QWidget):
 
         # 一系列组件
         # 按钮
-        self.screen_w, self.screen_h = get_real_resolution()
+        self.screen_w, self.screen_h = None, None
         self.file_button = None
         self.file_2_qrcode_button = None
         self.start_button = None
@@ -129,6 +128,9 @@ class File2QRcodeGenerator(QWidget):
         # 日志
         self.log_text_edit = None
         self.qrcode_img_labels = None
+
+        self.splitter = None
+
 
         # 一系列timer
         self.count_down_timer = None
@@ -226,10 +228,7 @@ class File2QRcodeGenerator(QWidget):
 
         # 二维码展示布局
         self.qrcode_img_labels = [QLabel(self) for _ in range(6)]  # 创建9个QLabel
-        for label in self.qrcode_img_labels:
-            label.setAlignment(Qt.AlignCenter)  # 居中对齐
-            label.setScaledContents(True)  # 自动缩放内容以适应标签大小
-            label.setFixedSize((self.screen_w - 100) / 4, (self.screen_w - 100) / 4)  # 设置固定大小，可以根据需要调整
+
 
         grid_layout = QGridLayout()  # 使用QGridLayout进行3x3布局
         for i, label in enumerate(self.qrcode_img_labels):
@@ -242,21 +241,31 @@ class File2QRcodeGenerator(QWidget):
         right_widget.setLayout(grid_layout)
 
         # 分割器
-        splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(left_widget)
-        splitter.addWidget(right_widget)
+        self.splitter = QSplitter(Qt.Horizontal)
+        self.splitter.addWidget(left_widget)
+        self.splitter.addWidget(right_widget)
 
         # 设置主窗口的中心部件
         container = QWidget()
         container_layout = QVBoxLayout()
-        container_layout.addWidget(splitter)
+        container_layout.addWidget(self.splitter)
         container.setLayout(container_layout)
         self.setLayout(container_layout)
 
-        # 窗口显示后调整分割器大小
-        # self.resize(self.screen_w, self.screen_h)  # 设置初始窗口大小
+
         self.showMaximized()  # 全屏显示
-        splitter.setSizes([(self.screen_w - 100) / 4, (self.screen_w - 100) * 3 / 4])  # 左侧300，右侧700
+        QTimer.singleShot(100, self.postInitLayout)
+
+
+
+    def postInitLayout(self):
+        size = self.size()
+        self.screen_w, self.screen_h = size.width(), size.height()
+        for label in self.qrcode_img_labels:
+            label.setAlignment(Qt.AlignCenter)  # 居中对齐
+            label.setScaledContents(True)  # 自动缩放内容以适应标签大小
+            label.setFixedSize((self.screen_w - 100) / 4, (self.screen_w - 100) / 4)  # 设置固定大小，可以根据需要调整
+        self.splitter.setSizes([(self.screen_w - 100) / 4, (self.screen_w - 100) * 3 / 4])  # 左侧300，右侧700
 
     def log(self, message):
         self.log_text_edit.append(message)
@@ -282,7 +291,7 @@ class File2QRcodeGenerator(QWidget):
                                                        options=options)
             if file_path:
                 if not self.checkFileSize(file_path):
-                    messagebox.showwarning("note", "所选文件大小超过5MB")
+                    # messagebox.showwarning("note", "所选文件大小超过5MB")
                     self.log("> 文件大于5MB，不允许传输，请重新选择文件")
                 else:
                     # 处理文件
@@ -435,10 +444,10 @@ class File2QRcodeGenerator(QWidget):
 
 
 if __name__ == '__main__':
-    root = Tk()
-    root.withdraw()
-
+    # 创建应用程序
     app = QApplication(sys.argv)
-    ex = File2QRcodeGenerator()
-    ex.show()
+    # 创建并显示窗口
+    window = File2QRcodeGenerator()
+    window.show()
+    # 运行应用程序
     sys.exit(app.exec_())

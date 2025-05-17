@@ -1,20 +1,18 @@
-import win32con
-import win32gui
-import win32print
+
 from zlib import compress, decompress
 from base64 import b64encode, b64decode
 from qrcode import QRCode, ERROR_CORRECT_L, ERROR_CORRECT_M, ERROR_CORRECT_Q, ERROR_CORRECT_H
 from hashlib import md5
 
 
-def get_real_resolution():
-    """获取真实的分辨率"""
-    hDC = win32gui.GetDC(0)
-    # 横向分辨率
-    w = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
-    # 纵向分辨率
-    h = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
-    return w, h
+# def get_real_resolution():
+#     """获取真实的分辨率"""
+#     hDC = win32gui.GetDC(0)
+#     # 横向分辨率
+#     w = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
+#     # 纵向分辨率
+#     h = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
+#     return w, h
 
 
 # 二维码纠错级别
