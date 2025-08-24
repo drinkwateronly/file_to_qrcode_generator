@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime
 import re
@@ -9,44 +10,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QVBoxLayout, QAppli
 from tools import str2file_decoder, getMd5
 from pyzbar.pyzbar import decode
 from random import randint
-
-
-class QRCodeDetector(QThread):
-    """ 监控屏幕上有无二维码，若有则发送二维码数量信号 """
-    detect_signal = pyqtSignal(list)
-    error_signal = pyqtSignal(str)
-
-    def __init__(self, *args, **kwargs):
-        super(QRCodeDetector, self).__init__()
-
-    def run(self):
-        try:
-            # 截屏
-            start = time.time()
-            screenshot = ImageGrab.grab()
-            # 检测二维码对象
-            detected_objs = decode(screenshot)
-            if len(detected_objs) != 0:
-                data = detected_objs[0].data.decode('utf-8')
-                print(f"Detected QR Code: {data}")
-                # 尝试获取其中的所需扫描二维码数量
-                match = re.search(r'^##(\d+)##(-?\d+)##(\d+)@@', data)
-                if not match:
-                    # 检测到二维码，但是二维码里没有数字
-                    self.error_signal.emit("探测出二维码，但未能获取所需扫描次数")
-                    return
-                # 二维码总数
-                total_qrcode_cnt = int(match.group(1))
-                # 二维码的index
-                patch_index = int(match.group(2))
-                # 二维码的发送间隔
-                qrcode_show_interval = int(match.group(3))
-                self.detect_signal.emit([total_qrcode_cnt, qrcode_show_interval])
-            end = time.time()
-            print(f"截屏用时：{(end - start) * 1000}")
-        except Exception as e:
-            self.log(f"QRCodeDetector: {e}")
-            self.error_signal.emit(e)
+from QRCodeDetector import QRCodeDetector
 
 
 class ScreenshotGrabber(QThread):
@@ -97,11 +61,11 @@ class QRcode2FileGenerator(QWidget):
         self.screenshot_grabber = None
 
         ## 指定qrcode数量
-        self.qrcode_num = 0
-        self.scan_num = 3
+        self.scan_num = 0
         self.data_list = []
-        self.qrcode_show_interval = 1000
+        self.scan_interval = 1000
         self.detect_interval = 50
+        self.qrcode_per_matrix = 6
 
     def onButtonClick(self):
         """按钮点击事件处理函数"""
@@ -116,13 +80,18 @@ class QRcode2FileGenerator(QWidget):
         self.log(f"检测二维码中{randint(1, 2) * '.'}")
 
     def qrcodeFirstShow(self, signal_list):
+        """ 二维码首次被检测到，开始扫描二维码 """
         try:
-            self.patch_cnt, self.qrcode_show_interval = signal_list[0], int(signal_list[1] / 2)
-            """ 二维码首次出现了，开始扫描二维码 """
-            self.scan_num = ceil(self.patch_cnt / 6) * 2
-            self.log(f"二维码出现，即将扫描{self.scan_num}次")
             # 停止检测器
             self.detector_timer.stop()
+
+            # 二维码总数量，二维码展示频率
+            self.patch_cnt, show_interval, self.qrcode_per_matrix = signal_list[0], signal_list[1], signal_list[2]
+            # 二维码扫描间隔 = 二维码展示间隔 / 2
+            self.scan_interval = int(show_interval / 2)
+            # 扫描次数 = 二维码数量 / 每个矩阵包含二维码数量 * 2
+            self.scan_num = ceil(self.patch_cnt / self.qrcode_per_matrix) * 2
+            self.log(f"检测到二维码，单次有{self.qrcode_per_matrix}个二维码，需要扫描{self.scan_num}次")
 
             # 开启截图器
             self.screenshot_grabber = ScreenshotGrabber()
@@ -134,9 +103,9 @@ class QRcode2FileGenerator(QWidget):
             # 设置一个计时器
             self.scanner_timer.timeout.connect(self.screenshot_grabber.start)
             # 每秒触发一次二维码扫描
-            self.scanner_timer.start(self.qrcode_show_interval)
+            self.scanner_timer.start(self.scan_interval)
         except Exception as e:
-            self.log(e)
+            self.log(f"[qrcodeFirstShow]: {e}")
 
     def screenshotDone(self, screenshot):
         try:
@@ -150,42 +119,43 @@ class QRcode2FileGenerator(QWidget):
 
             if self.scan_num > 0:
                 """ 扫描未完成 """
+                self.log(f"正在扫描二维码，还剩{self.scan_num}次")
                 for qrcode_data in qrcode_data_list:
                     self.data_list.append(qrcode_data)
                 self.scan_num -= 1
-
-                # if
-                # self.log(f'剩余{self.scan_num}')
             else:
                 """ 扫描次数完成，停止扫描 """
                 self.scanner_timer.stop()
                 self.log("完成所有二维码扫描，开始合成文件")
 
                 data_mapped = {}
-                print(len(self.data_list))
                 for data in self.data_list:
-                    print(data)
-                    pattern = r"^##(\d+)##(-?\d+)##(\d+)@@"  # 匹配开头到第一个 ##数字1##数字2@@‘
                     # 提取所有匹配的数字对
                     try:
-                        matches = re.search(pattern, data)
-                        index = int(matches.group(2))
+                        data = json.loads(data)
+                        index = int(data['idx'])
+                        # print(recv_data)
                     except Exception as e:
                         print(e)
                         continue
                     if index == -1:
                         continue
-                    # 移除所有匹配的模式
-                    patch = re.sub(pattern, "", data, count=1)  # count=1 表示只替换第一个匹配项
 
-                    data_mapped[index] = patch
+                    data_mapped[index] = data['info']
 
+                error_flag = False
                 sorted_values = ''
-                for i in range(self.patch_cnt - 18):
+                for i in range(self.patch_cnt):
                     if not data_mapped.get(i):
-
                         self.log(f"缺少索引{i}对应二维码！")
                         print(f"缺少索引{i}对应二维码！")
+                        error_flag = True
+
+                if error_flag:
+                    self.log("二维码数据不完整，请重新扫描")
+                    return
+
+                for i in range(self.patch_cnt):
                     sorted_values += data_mapped.get(i)
                     # print(data_mapped.get(i))
                 compressed_data = "".join(sorted_values)
@@ -212,4 +182,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = QRcode2FileGenerator()
     window.show()
+    window.setWindowTitle('QRMatrixScanner v1.2')
     sys.exit(app.exec_())
